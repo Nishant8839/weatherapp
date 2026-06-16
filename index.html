@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Premium Weather Dashboard — real-time forecasts, hourly timelines, and advanced meteorological metrics powered by OpenWeather." />
+  <title>Weather Dashboard — Real-Time Forecast</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Dynamic animated gradient background -->
+  <div id="bg-gradient" class="bg-gradient bg-gradient--default" aria-hidden="true"></div>
+
+  <div class="app-container">
+
+    <!-- ─── HEADER / SEARCH ─── -->
+    <header id="app-header" class="header">
+      <div class="header__brand">
+        <svg class="header__logo" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <span class="header__title">Weather</span>
+      </div>
+      <form id="search-form" class="search" autocomplete="off">
+        <div class="search__wrapper">
+          <svg class="search__icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input id="search-input" class="search__input" type="text" placeholder="Search city…" aria-label="Search for a city" />
+          <div id="search-spinner" class="search__spinner hidden" aria-hidden="true">
+            <div class="spinner"></div>
+          </div>
+        </div>
+      </form>
+    </header>
+
+    <!-- ─── TOAST NOTIFICATIONS ─── -->
+    <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+    <!-- ─── SKELETON LOADER ─── -->
+    <main id="skeleton-loader" class="main hidden">
+      <section class="hero skeleton-hero">
+        <div class="skeleton skeleton--text skeleton--city"></div>
+        <div class="skeleton skeleton--text skeleton--time"></div>
+        <div class="skeleton skeleton--icon"></div>
+        <div class="skeleton skeleton--text skeleton--temp"></div>
+        <div class="skeleton skeleton--text skeleton--desc"></div>
+      </section>
+      <section class="hourly-section">
+        <div class="skeleton skeleton--text skeleton--section-title"></div>
+        <div class="hourly-scroll">
+          <div class="skeleton skeleton--card skeleton--hourly-card"></div>
+          <div class="skeleton skeleton--card skeleton--hourly-card"></div>
+          <div class="skeleton skeleton--card skeleton--hourly-card"></div>
+          <div class="skeleton skeleton--card skeleton--hourly-card"></div>
+          <div class="skeleton skeleton--card skeleton--hourly-card"></div>
+          <div class="skeleton skeleton--card skeleton--hourly-card"></div>
+        </div>
+      </section>
+      <section class="daily-section">
+        <div class="skeleton skeleton--text skeleton--section-title"></div>
+        <div class="daily-grid">
+          <div class="skeleton skeleton--card skeleton--daily-card"></div>
+          <div class="skeleton skeleton--card skeleton--daily-card"></div>
+          <div class="skeleton skeleton--card skeleton--daily-card"></div>
+          <div class="skeleton skeleton--card skeleton--daily-card"></div>
+          <div class="skeleton skeleton--card skeleton--daily-card"></div>
+          <div class="skeleton skeleton--card skeleton--daily-card"></div>
+          <div class="skeleton skeleton--card skeleton--daily-card"></div>
+        </div>
+      </section>
+      <section class="metrics-section">
+        <div class="skeleton skeleton--text skeleton--section-title"></div>
+        <div class="metrics-grid">
+          <div class="skeleton skeleton--card skeleton--metric-card"></div>
+          <div class="skeleton skeleton--card skeleton--metric-card"></div>
+          <div class="skeleton skeleton--card skeleton--metric-card"></div>
+          <div class="skeleton skeleton--card skeleton--metric-card"></div>
+          <div class="skeleton skeleton--card skeleton--metric-card"></div>
+          <div class="skeleton skeleton--card skeleton--metric-card"></div>
+        </div>
+      </section>
+    </main>
+
+    <!-- ─── ACTUAL CONTENT (hidden until data loads) ─── -->
+    <main id="weather-content" class="main hidden">
+
+      <!-- Hero -->
+      <section id="hero-section" class="hero">
+        <h1 id="hero-city" class="hero__city"></h1>
+        <p id="hero-time" class="hero__time"></p>
+        <img id="hero-icon" class="hero__icon" src="" alt="Weather icon" width="120" height="120" />
+        <p id="hero-temp" class="hero__temp"></p>
+        <p id="hero-desc" class="hero__desc"></p>
+        <p id="hero-feels" class="hero__feels"></p>
+      </section>
+
+      <!-- Hourly Timeline -->
+      <section class="hourly-section">
+        <h2 class="section-title">Hourly Forecast</h2>
+        <div id="hourly-scroll" class="hourly-scroll"></div>
+      </section>
+
+      <!-- Daily Forecast -->
+      <section class="daily-section">
+        <h2 class="section-title">7-Day Forecast</h2>
+        <div id="daily-grid" class="daily-grid"></div>
+      </section>
+
+      <!-- Advanced Metrics -->
+      <section class="metrics-section">
+        <h2 class="section-title">Current Conditions</h2>
+        <div id="metrics-grid" class="metrics-grid"></div>
+      </section>
+
+    </main>
+
+    <!-- ─── WELCOME / EMPTY STATE ─── -->
+    <main id="welcome-state" class="main welcome">
+      <div class="welcome__content">
+        <svg class="welcome__icon" viewBox="0 0 24 24" width="80" height="80" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 0 1 0 9Z"/></svg>
+        <h1 class="welcome__title">Weather Dashboard</h1>
+        <p class="welcome__subtitle">Search for any city to see real-time weather,<br/>hourly forecasts, and detailed conditions.</p>
+      </div>
+    </main>
+
+  </div>
+
+  <script src="app.js" type="module"></script>
+</body>
+</html>
